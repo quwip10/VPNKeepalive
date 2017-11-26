@@ -16,12 +16,12 @@
 
 #Global Variables
 now=$(date)
-interface=wlan0
+interface=$(/sbin/ip -o -4 route show to default |awk '{print $6}')
 serveraddress=10.8.0.1
 log=/var/log/syslog
 scriptpath=$(pwd)/customRestart.sh
 
-echo "Enter primary network interface (Default is wlan0):" 
+echo "Enter primary network interface (Your default route is using $interface):" 
 read interfaceIn
 
 if [ -z "$interfaceIn" ];
