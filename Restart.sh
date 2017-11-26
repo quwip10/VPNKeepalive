@@ -19,6 +19,7 @@ now=$(date)
 interface=wlan0
 serveraddress=10.8.0.1
 log=/var/log/syslog
+scriptpath=$(pwd)/customRestart.sh
 
 echo "Enter primary network interface (Default is wlan0):" 
 read interfaceIn
@@ -69,3 +70,5 @@ echo "	/etc/init.d/openvpn restart >> $log" >> customRestart.sh
 echo 'fi' >> customRestart.sh
  
 chmod 700 customRestart.sh
+
+#(crontab -l ; echo "*/$interval * * * * $scriptpath")| crontab -
