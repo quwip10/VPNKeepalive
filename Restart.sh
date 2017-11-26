@@ -21,7 +21,31 @@ serveraddress=10.8.0.1
 log=/var/log/syslog
 scriptpath=$(pwd)/customRestart.sh
 
-echo "Enter primary network interface (Your default route is using $interface):" 
+if [ -f /etc/default/openvpn ];
+then
+	echo "OpenVPN default file exists."
+else
+	echo '/etc/default/openvpn does not exist.'
+	echo 'Do you want to install OpenVPN now? (y/n)'
+	read yesno
+
+	if [ $yesno == "y" ];
+	then
+#		sudo apt-get install openvpn
+		echo $yesno "Installing OpenVPN"
+	else
+		echo "This script requires /etc/default/openvpn to run properly. Exiting"
+#		exit
+	fi
+fi
+
+if [ -f ./customRestart.sh ];
+then
+	echo 'customRestart.sh already exists in this directory! Exiting'
+	exit
+fi
+
+echo "Enter primary network interface. Enter for default. (Your default route is using $interface):" 
 read interfaceIn
 
 if [ -z "$interfaceIn" ];
@@ -72,3 +96,5 @@ echo 'fi' >> customRestart.sh
 chmod 700 customRestart.sh
 
 #(crontab -l ; echo "*/$interval * * * * $scriptpath")| crontab -
+
+echo 'Script completed successfully.\nA new script customRestart.sh should now exist in your current directory.\nNOTE: This script cannot be moved or renamed or the cronjob will fail!\n'
