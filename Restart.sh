@@ -16,14 +16,16 @@
 
 #Global Variables
 now=$(date)
-interface= "wlan0"
+interface=wlan0
+serveraddress=10.8.0.1
+log=/var/log/syslog
 
-if ping -c 2 10.8.0.1 &> /dev/null;
+if ping -c 2 $serveraddress &> /dev/null;
 then
-	echo "$now OpenVPN keepalive successful" >> /var/log/syslog
+	echo "$now OpenVPN keepalive successful" >> $log
 else
-	echo "$now OpenVPN keepalive failed" >> /var/log/syslog
-	echo "$now Restarting Networking" >> /var/log/syslog
+	echo "$now OpenVPN keepalive failed" >> $log
+	echo "$now Restarting Networking" >> $log
 	/sbin/ifdown $interface
 	/sbin/ifup $interface
 	sleep 30 
