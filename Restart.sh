@@ -13,7 +13,10 @@
 #stored in: /etc/openvpn
 
 #Script to ping server
+
+#Global Variables
 now=$(date)
+interface= "wlan0"
 
 if ping -c 2 10.8.0.1 &> /dev/null;
 then
@@ -21,8 +24,8 @@ then
 else
 	echo "$now OpenVPN keepalive failed" >> /var/log/syslog
 	echo "$now Restarting Networking" >> /var/log/syslog
-	/sbin/ifdown wlan0
-	/sbin/ifup wlan0
+	/sbin/ifdown $interface
+	/sbin/ifup $interface
 	sleep 30 
 
 	echo "$now Restarting OpenVPoopN" >> /var/log/syslog
