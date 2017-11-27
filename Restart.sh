@@ -39,12 +39,12 @@ else
 	if [ $yesno == "y" ];
 	then
 #		sudo apt-get install openvpn
-		echo $yesno " Installing OpenVPN"
+		printf "Installing OpenVPN\n"
 		sleep 1
 	else
 		printf "\nThis script requires /etc/default/openvpn to run properly. Exiting"
 		sleep 2
-#		exit
+		exit
 	fi
 
 	sleep 1
@@ -60,9 +60,8 @@ fi
 
 printf "\nEnter primary network interface. (Your default route is using $interface)\n" 
 printf "Available interfaces: "
-#echo /usr/bin/basename -a /sys/class/net/*
 echo $(/bin/ls /sys/class/net/)
-read interface
+read interfaceIn
 
 #if [ -z "$interfaceIn" ];
 #then
@@ -70,6 +69,18 @@ read interface
 #else
 #	interface=$interfaceIn
 #fi
+
+until [ ! -z "$interfaceIn" ];
+do
+	printf "\nYou must enter an interface.\n"
+	sleep 1	
+	printf "\nEnter primary network interface. (Your default route is using $interface)\n" 
+	printf "Available interfaces: "
+	echo $(/bin/ls /sys/class/net/)
+	read interfaceIn
+done
+
+sleep 1
 
 printf "\nEnter primary VPN Server Address (Default is 10.8.0.1): "
 read serveraddressIn
