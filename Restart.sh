@@ -16,7 +16,9 @@
 
 #Global Variables
 now=$(date)
-interface=$(/sbin/ip -o -4 route show to default |awk '{print $6}')
+#Below line commented out due to bug finding that $6 is not always the correct word number to display the interface.
+#interface=$(/sbin/ip -o -4 route show to default |awk '{print $6}')
+interface=$(/sbin/ip -o -4 route show to default |awk '{print $5 " " $6}')
 serveraddress=10.8.0.1
 log=/var/log/syslog
 scriptpath=$(pwd)/customRestart.sh
@@ -46,6 +48,9 @@ then
 fi
 
 echo "Enter primary network interface. Enter for default. (Your default route is using $interface):" 
+echo "Available interfaces: "
+#echo /usr/bin/basename -a /sys/class/net/*
+echo $(ls /sys/class/net/)
 read interfaceIn
 
 if [ -z "$interfaceIn" ];
@@ -97,4 +102,4 @@ chmod 700 customRestart.sh
 
 #(crontab -l ; echo "*/$interval * * * * $scriptpath")| crontab -
 
-echo 'Script completed successfully.\nA new script customRestart.sh should now exist in your current directory.\nNOTE: This script cannot be moved or renamed or the cronjob will fail!\n'
+printf "Script completed successfully.\nA new script customRestart.sh should now exist in your current directory.\nNOTE: This script cannot be moved or renamed or the cronjob will fail!\n"
