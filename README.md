@@ -12,5 +12,5 @@ Furthermore, the /etc/default/openvpn file must have the AUTOSTART=ALL option en
 
 Future enhancements will make this all interactive. (This work is taking place in the "interactive-patch" and "crontab-patch")
 
-It is designed to be a crontab job running as often as is necessary to poll the connection.
+It is designed to be a cron job running as often as is necessary to poll the connection.
 
