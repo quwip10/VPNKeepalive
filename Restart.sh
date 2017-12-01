@@ -44,8 +44,8 @@ else
 		printf "Installing OpenVPN\n"
 		sleep 1
 	else
-		printf "\nThis script requires /etc/default/openvpn to run properly. Exiting"
-		sleep 2
+		printf "\nThis script requires /etc/default/openvpn to run properly. Exiting\n"
+		sleep 1
 		exit
 	fi
 
