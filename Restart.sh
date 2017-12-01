@@ -146,7 +146,7 @@ echo "	/sbin/ifdown $interface" >> customRestart.sh
 echo "	/sbin/ifup $interface" >> customRestart.sh
 echo '	sleep 30' >> customRestart.sh 
 
-echo "	echo \"\$now Restarting OpenVPoopN\" >> $log" >> customRestart.sh
+echo "	echo \"\$now Restarting OpenVPN\" >> $log" >> customRestart.sh
 echo "	/etc/init.d/openvpn restart >> $log" >> customRestart.sh
 echo 'fi' >> customRestart.sh
  
