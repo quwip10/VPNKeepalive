@@ -12,6 +12,8 @@
 #And ensure that the client.ovpn has been renamed client.conf and is
 #stored in: /etc/openvpn
 
+printf "VPNKeepalive Copyright (C) 2017  quwip10\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions;\n"
+
 #Script to ping server
 
 #Global Variables
