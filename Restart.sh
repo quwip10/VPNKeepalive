@@ -30,7 +30,7 @@ else
 	/sbin/ifup $interface
 	sleep 30 
 
-	echo "$now Restarting OpenVPoopN" >> /var/log/syslog
+	echo "$now Restarting OpenVPN" >> /var/log/syslog
 	/etc/init.d/openvpn restart >> /var/log/syslog
 fi
  
