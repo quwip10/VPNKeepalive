@@ -12,7 +12,7 @@
 #And ensure that the client.ovpn has been renamed client.conf and is
 #stored in: /etc/openvpn
 
-printf "VPNKeepalive Copyright (C) 2017  quwip10\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions;\n"
+printf "VPNKeepalive Copyright (C) 2017  quwip10\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions;\nee the GNU General Public License v3.0 for more information\n"
 
 #Script to ping server
 
