@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#This is a keapalive script for my OpenVPN clients
+#This is a keepalive script for OpenVPN clients
 #This script will ping the server twice
 #If successful, it will print such to syslog
 #If it fails, it will restart the interface specified
