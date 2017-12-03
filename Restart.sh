@@ -103,7 +103,7 @@ if [ -z "$logIn" ];
 then
 	printf "Using default.\n"
 else
-	log=$logIn	
+	log=$logIn
 fi
 
 sleep 1
