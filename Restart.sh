@@ -28,11 +28,11 @@ cronuser=root
 cronfreq=5
 
 printf "\nChecking if /etc/default/openvpn exists...\n"
-sleep 2
+sleep 1
 
 if [ -f /etc/default/openvpn ];
 then
-	printf "\nOpenVPN default file exists."
+	printf "\nOpenVPN default file exists.\n"
 else
 	printf "\n/etc/default/openvpn does not exist.\n"
 	printf "\nDo you want to install OpenVPN now? (y/n): "
@@ -42,21 +42,21 @@ else
 	then
 #		sudo apt-get install openvpn
 		printf "Installing OpenVPN\n"
-		sleep 1
+		sleep 0.5
 	else
 		printf "\nThis script requires /etc/default/openvpn to run properly. Exiting\n"
 		sleep 1
 		exit
 	fi
 
-	sleep 1
+	sleep 0.5
 fi
 
 
 if [ -f ./customRestart.sh ];
 then
 	printf "customRestart.sh already exists in this directory! Exiting"
-	sleep 2
+	sleep 1
 	exit
 fi
 
@@ -75,14 +75,14 @@ read interfaceIn
 until [ ! -z "$interfaceIn" ];
 do
 	printf "\nYou must enter an interface.\n"
-	sleep 1	
+	sleep 0.5
 	printf "\nEnter primary network interface. (Your default route is using $interface)\n" 
 	printf "Available interfaces: "
 	echo $(/bin/ls /sys/class/net/)
 	read interfaceIn
 done
 
-sleep 1
+sleep 0.5
 
 printf "\nEnter primary VPN Server Address (Default is 10.8.0.1): "
 read serveraddressIn
@@ -152,7 +152,7 @@ echo 'fi' >> customRestart.sh
  
 chmod 700 customRestart.sh
 
-#(crontab -u $cronuser -l ; echo "*/$interval * * * * $scriptpath")| crontab -
+{ crontab -l -u $cronuser; echo "*/$cronfreq * * * * $scriptpath"; }| crontab -
 
 printf "\nScript completed successfully.\nA new script customRestart.sh should now exist in your current directory.\nNOTE: This script cannot be moved or renamed or the cronjob will fail!\n \n"
 
