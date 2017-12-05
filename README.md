@@ -1,18 +1,16 @@
 # VPNKeepalive
-(The master branch is currently the original version that is hardcoded and requires modifications by the user to work properly.)
+(The master branch has been updated to now be fully interactive.)
 
-(The current Beta is in the "crontab-patch" branch.)
+(The original script can still be found at https://github.com/quwip10/VPNKeepalive/tree/original-script-archive )
 
 This script is designed to do self health checks by pinging the home VPN Server.
 If the ping fails, the device will restart the interface (ifdown/ifup). Then it will
 restart the OpenVPN client services.
 
-For this to work, the client.ovpn must be renamed client.conf and placed in the /etc/openvpn/ 
+Given the path to the client.ovpn it will automatically be renamed customScript.conf and placed in the /etc/openvpn/ 
 directory.
 
-Furthermore, the /etc/default/openvpn file must have the AUTOSTART=ALL option enabled.
+Furthermore, the /etc/default/openvpn file will be automatically modified with the AUTOSTART="customScript" option added.
 
-Future enhancements will make this all interactive. (This work is taking place in the "interactive-patch" and "crontab-patch")
-
-It is designed to be a cron job running as often as is necessary to poll the connection.
+This script will automatically create a customized script based on the user input. It will place this script in the same directory as the original and it will automatically add the cronjob to run at the specified frequency. 
 
