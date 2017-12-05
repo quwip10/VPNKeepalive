@@ -12,7 +12,7 @@
 #And ensure that the client.ovpn has been renamed client.conf and is
 #stored in: /etc/openvpn
 
-printf "VPNKeepalive Copyright (C) 2017  quwip10\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions;\nSee the GNU General Public License v3.0 for more information\n"
+printf "\nVPNKeepalive Copyright (C) 2017  quwip10\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions;\nSee the GNU General Public License v3.0 for more information\n"
 
 #Script to ping server
 
@@ -26,13 +26,15 @@ log=/var/log/syslog
 scriptpath=$(pwd)/customRestart.sh
 cronuser=root
 cronfreq=5
+confPath=./
+ovpnPath=
 
 printf "\nChecking if /etc/default/openvpn exists...\n"
 sleep 1
 
 if [ -f /etc/default/openvpn ];
 then
-	printf "\nOpenVPN default file exists.\n"
+	printf "\nOpenVPN default file exists!\n"
 else
 	printf "\n/etc/default/openvpn does not exist.\n"
 	printf "\nDo you want to install OpenVPN now? (y/n): "
@@ -40,7 +42,7 @@ else
 
 	if [ $yesno == "y" ];
 	then
-#		sudo apt-get install openvpn
+		apt-get install openvpn
 		printf "Installing OpenVPN\n"
 		sleep 0.5
 	else
@@ -52,12 +54,49 @@ else
 	sleep 0.5
 fi
 
-
+#This procedure checks if the customRestart.sh script already exists
+#If it does it prompts the user to reset the previous changes or exit
 if [ -f ./customRestart.sh ];
 then
-	printf "customRestart.sh already exists in this directory! Exiting"
+	printf "\ncustomRestart.sh already exists in this directory! \n"
 	sleep 1
-	exit
+	printf "\nWould you like to reset all changes previously made by this script? "
+	read yesno
+	
+	if [ $yesno == "y" ];
+	then
+		if [ -f /etc/openvpn/customScript.conf ];
+		then
+			mv /etc/openvpn/customScript.conf /etc/openvpn/customScript.bak
+		fi	
+		
+		sed -i.bak /customScript/d /etc/default/openvpn
+		
+		mv ./customRestart.sh ./customRestart.sh.bak
+
+		printf "\nCleaning up...\n"
+		sleep 2
+		printf "\nRenamed related files with .bak extension.\n\n"
+		exit
+
+	else
+		printf "\nExiting\n"
+		exit
+	fi
+fi
+
+#This procedure will take in the path to the .conf or .ovpn file
+#It will then remove the .ovpn extension if applicable and append .conf
+#This file willl then be copied to the /etc/openvpn/ directory
+printf "\nEnter full path to the CLIENT.conf or .ovpn file. (Enter to skip): "
+read ovpnPath
+
+if [ ! -z "$ovpnPath" ];
+then
+#The below line was attempting to rename the extension
+#	confpath = sed -e "s/.ovpn//g" <<< $ovpnPath
+	cp $ovpnPath /etc/openvpn/customScript.conf
+	echo -e "AUTOSTART=\"customScript\"" >> /etc/default/openvpn
 fi
 
 printf "\nEnter primary network interface. (Your default route is using $interface)\n" 
@@ -152,7 +191,7 @@ echo 'fi' >> customRestart.sh
  
 chmod 700 customRestart.sh
 
-{ crontab -l -u $cronuser; echo "*/$cronfreq * * * * $scriptpath"; }| crontab -
+{ sudo crontab -l -u $cronuser; echo "*/$cronfreq * * * * $scriptpath"; }| crontab -
 
 printf "\nScript completed successfully.\nA new script customRestart.sh should now exist in your current directory.\nNOTE: This script cannot be moved or renamed or the cronjob will fail!\n \n"
 
