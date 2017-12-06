@@ -22,6 +22,21 @@ then
 	exit 
 fi
 
+#Print fancy name of program
+
+printf '__     ______  _   _ _  __                     _ _           '
+printf "\n"
+printf '\ \   / /  _ \| \ | | |/ /___  ___ _ __   __ _| (_)_   _____ '
+printf "\n"
+printf ' \ \ / /| |_) |  \| | ` // _ \/ _ \ `_ \ / _` | | \ \ / / _ \'
+printf "\n"
+printf '  \ V / |  __/| |\  | . \  __/  __/ |_) | (_| | | |\ V /  __/'
+printf "\n"
+printf '   \_/  |_|   |_| \_|_|\_\___|\___| .__/ \__,_|_|_| \_/ \___|'
+printf "\n"
+printf '                                  |_|                        '
+printf "\n"
+
 #Ths just prints the license info
 printf "\nVPNKeepalive Copyright (C) 2017  quwip10\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions;\nSee the GNU General Public License v3.0 for more information\n"
 
@@ -208,11 +223,11 @@ if [ -z "$cronuserIn" ];
 then
 	printf "Using default.\n"
 else
-	until  id $cronuserIn >/dev/null 2>&1;
+	until  id $cronuserIn >/dev/null 2>&1 && [ ! -z "$cronuserIn" ];
 	do
 		printf "\nPlease enter a valid user.\n"
 		sleep 0.5	
-		printf "\nUser to run cron jobs under. Enter for default. (Default is root): "
+		printf "\nUser to run cron jobs under. (Default is root): "
 		read cronuserIn
 	done
 
@@ -300,3 +315,4 @@ sleep 1
 printf "\nScript completed successfully.\nA new script customRestart.sh should now exist in your current directory.\nNOTE: This script cannot be moved or renamed or the cronjob will fail!\n \n"
 
 sleep 2
+
