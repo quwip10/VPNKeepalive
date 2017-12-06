@@ -8,7 +8,7 @@
 #For this to work properly, the correct interface must be specified
 #The OpenVPN client connection must also be set to autoconnect in:
 #/etc/default/openvpn
-#Use AUTOSTART="all"
+#Use AUTOSTART="all" or AUTOSTART="CONFIGNAME"
 #And ensure that the client.ovpn has been renamed client.conf and is
 #stored in: /etc/openvpn
 
@@ -28,6 +28,24 @@ cronuser=root
 cronfreq=5
 confPath=./
 ovpnPath=
+
+#This will ensure that the script is running with root priveleges
+#and will exit if not
+
+if [ $EUID -ne 0 ];
+then
+	printf "\nPlease run with sudo/root priveleges. Exiting...\n\n"
+	sleep 1
+	exit 
+fi
+
+#The below checks to see if /etc/default/openvpn exists
+#This dir is required for automated OpenVPN connections
+#If it does not exist, it will prompt the user to install
+
+#***Note, in the event that OpenVPN has been previously installed
+#but is then uninstalled, the dir will exist, but the cron script
+#will repeatedly run and fail since OpenVPN will never start...
 
 printf "\nChecking if /etc/default/openvpn exists...\n"
 sleep 1
@@ -93,8 +111,6 @@ read ovpnPath
 
 if [ ! -z "$ovpnPath" ];
 then
-#The below line was attempting to rename the extension
-#	confpath = sed -e "s/.ovpn//g" <<< $ovpnPath
 	cp $ovpnPath /etc/openvpn/customScript.conf
 	echo -e "AUTOSTART=\"customScript\"" >> /etc/default/openvpn
 fi
@@ -166,7 +182,13 @@ if [ -z "$cronfreqIn" ];
 then
 	printf "Using default.\n"
 else
-	cronfreq=$confreqIn
+	until [[ "$cronfreqIn" =~ ^[0-9]+$ ]];
+	do
+		printf "\nMust be an integer.\n\nFrequency in minutes to run the script: "
+		read cronfreqIn
+	done
+
+	cronfreq=$cronfreqIn
 fi
 
 sleep 1
@@ -191,7 +213,11 @@ echo 'fi' >> customRestart.sh
  
 chmod 700 customRestart.sh
 
+#This line prints the crontab for the selected user, adds an entry for the custom script,
+#and reinstalls the crontab
 { sudo crontab -l -u $cronuser; echo "*/$cronfreq * * * * $scriptpath"; }| crontab -
+
+sleep 1
 
 printf "\nScript completed successfully.\nA new script customRestart.sh should now exist in your current directory.\nNOTE: This script cannot be moved or renamed or the cronjob will fail!\n \n"
 
